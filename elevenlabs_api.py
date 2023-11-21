@@ -1,6 +1,6 @@
 import requests
 
-ELEVENLABS_API_KEY = 'your_api_key_here'
+ELEVENLABS_API_KEY = 'KEY HERE'
 
 def create_voice(audio_file_path):
     # Read audio file contents
