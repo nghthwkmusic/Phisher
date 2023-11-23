@@ -1,40 +1,50 @@
+# Phisher: Synthetic Voice Tool
 
-# Phisher App
-
-## Introduction
-Phisher App is a tool designed for cybersecurity professionals to simulate phishing attacks for educational and security testing purposes. Its primary goal is to assist organizations in assessing and improving their phishing awareness and defense strategies.
+Phisher is a command-line tool that allows users to create and use synthetic voices from web based videos.
+## Description
+This Python application enables the extraction of audio segments from YouTube videos, creation of a synthetic voice based on the extracted audio, and synthesis of speech using the created voice. It's a versatile tool for generating custom voiceovers and synthetic speech.
 
 ## Features
-- **Email Template Customization:** Create and use custom phishing email templates.
-- **Target Management:** Easily manage and import target email lists.
-- **Attack Simulation:** Simulate various phishing scenarios to test organizational preparedness.
-- **Reporting:** Generate detailed reports post-simulation for analysis and improvement.
+
+
+- Downloads audio from a specified segment of a YouTube video.
+
+- Creates a realistic clone voice voice using the downloaded audio.
+
+- Synthesizes speech from text using the created synthetic voice.
+
+## Requirements
+- Python 3.x
 
 ## Installation
-1. **Clone the Repository:**
-   ```
-   git clone https://github.com/your-repository/phisher-app.git
-   ```
-2. **Install Dependencies:**
-   ```
-   pip install -r requirements.txt
-   ```
+
+  
+
+Ensure you have Python 3.x installed on your system. Install the required modules using the provided `requirements.txt` file:
+
+  
+
+```bash
+pip install -r requirements.txt
+```
+This will install all necessary dependencies, including youtube_downloader, elevenlabs_api, and config_manager.
 
 ## Usage
-- **Basic Usage:**
-  Run the app with the default settings.
-  ```
-  python phisher_app.py
-  ```
-- **Advanced Usage:**
-  Use command-line arguments for custom configurations.
-  ```
-  python phisher_app.py --list targets.txt --template custom_template.html
-  ```
 
-## Disclaimer
-Phisher App is intended strictly for educational and ethical testing purposes. It must not be used for illegal activities. Users must have explicit permission to test on any network or individuals.
+Run the script from the command line with the following arguments:
+- URL: The URL of the YouTube video.
+- Timestamp: The timestamp in the video from where to start capturing audio (format: hh:mm:ss).
+- Duration: The duration in seconds for which to capture audio from the video.
 
----
+Example:
+  ```bash
+python phisher.py <YouTube Video URL> <Timestamp> <Duration>
+```
 
-*This is a fictional tool created for demonstration purposes only.*
+After executing the command, you will be prompted to enter the text you wish the synthetic voice to say. The application will process this input and output a synthesized speech.
+
+## Contributing
+Contributions to the Phisher project are welcome. Please read the CONTRIBUTING.md file for guidelines on how to contribute.
+  
+## License
+This project is licensed under the MIT License - see the LICENSE.md file for more details.
