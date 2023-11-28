@@ -1,23 +1,26 @@
-from moviepy.editor import AudioFileClip
-import yt_dlp as youtube_dl
+import yt_dlp
 
-def download_audio(url, start_time, duration, output_filename="downloaded_audio.mp3"):
-    # Convert start_time to seconds (if it's in "HH:MM:SS" format) or directly to int/float
-    start_seconds = convert_to_seconds(start_time)
+def download_audio(url, timestamp, duration):
+    # Convert timestamp to seconds
+    hours, minutes, seconds = map(int, timestamp.split(':'))
+    start_time = hours * 3600 + minutes * 60 + seconds
 
-    # Ensure duration is an int or float representing seconds
-    duration_seconds = int(duration)
+    # Configure yt_dlp options
+    ydl_opts = {
+        'format': 'bestaudio/best',
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '192',
+        }],
+        'outtmpl': 'downloaded_audio.%(ext)s',
+        'postprocessor_args': [
+            '-ss', str(start_time),
+            '-t', str(duration)
+        ]
+    }
 
-    with youtube_dl.YoutubeDL({'format': 'bestaudio'}) as ydl:
-        info = ydl.extract_info(url, download=False)
-        audio_url = info['url']
-        with AudioFileClip(audio_url) as audio:
-            # Use the converted time values
-            audio_clip = audio.subclip(start_seconds, start_seconds + duration_seconds)
-            audio_clip.write_audiofile(output_filename)
-            
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        ydl.download([url])
 
-def convert_to_seconds(time_str):
-    # Convert "HH:MM:SS" format to seconds
-    h, m, s = map(int, time_str.split(':'))
-    return h * 3600 + m * 60 + s
+    return "downloaded_audio.mp3"  # This assumes the file is named 'downloaded_audio.mp3'

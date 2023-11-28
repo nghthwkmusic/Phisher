@@ -1,6 +1,7 @@
 import requests
 
 ELEVENLABS_API_KEY = 'f153c213864927bff8fd1c68bcc84837'
+MODEL_ID = 'English v1'
 
 def add_voice(description, files, labels, name):
     url = "https://api.elevenlabs.io/v1/voices/add"
@@ -17,26 +18,28 @@ def add_voice(description, files, labels, name):
     response = requests.post(url, headers=headers, data=data, files=files)
     return response.json()
 
-def synthesize_speech(voice_id, text):
-    # Prepare API request body
-    request_body = {
-        'voice_id': voice_id,
-        'text': text,
-    }
-
-    # Prepare API request headers
+def synthesize_speech(voice_id, text, model_id = MODEL_ID, output_format='mp3_44100_128', optimize_streaming_latency=0):
+    url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
     headers = {
-        'Authorization': f'Bearer {ELEVENLABS_API_KEY}',
-        'Content-Type': 'application/json',
+        "xi-api-key": ELEVENLABS_API_KEY,
+        "Content-Type": "application/json"
+    }
+    data = {
+        "model_id": model_id,
+        "text": text,
+        "output_format": output_format,
+        "optimize_streaming_latency": optimize_streaming_latency,
+        "voice_settings": {
+            "similarity_boost": 1.0,  # Set default values or adjust as needed
+            "stability": 1.0,
+            "style": 0,
+            "use_speaker_boost": True
+        }
     }
 
-    # Send API POST request to synthesize speech
-    response = requests.post('https://api.elevenlabs.io/v1/audio', headers=headers, json=request_body)
-
-    # Check for successful response
-    if response.status_code == 201:
-        # Extract audio URL from response JSON
-        audio_url = response.json()['audio_url']
+    response = requests.post(url, headers=headers, json=data)
+    if response.status_code == 200:
+        audio_url = response.content
         return audio_url
     else:
         raise Exception(f'Speech synthesis failed: {response.status_code} - {response.text}')
