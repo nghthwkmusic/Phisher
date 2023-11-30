@@ -30,9 +30,14 @@ def main():
     print("Voice ID:", voice_id)
     save_configuration(voice_id)
 
-    text_to_say = input("Enter the text you want the voice to say: ")
-    audio = synthesize_speech(voice_id, text_to_say)
-    play(audio)
+    try:
+        while True:
+            text_to_say = input("Enter the text you want the voice to say (Ctrl+C to exit): ")
+            audio = synthesize_speech(voice_id, text_to_say)
+            play(audio)
+    except KeyboardInterrupt:
+        print("\nExiting the program.")
+        return
 
 if __name__ == "__main__":
     main()
