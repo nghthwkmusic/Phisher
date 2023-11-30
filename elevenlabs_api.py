@@ -1,45 +1,28 @@
-import requests
+from elevenlabs import set_api_key, clone, Voice, VoiceSettings, generate
 
-ELEVENLABS_API_KEY = 'f153c213864927bff8fd1c68bcc84837'
-MODEL_ID = 'English v1'
+# Set your ElevenLabs API key
+set_api_key('f153c213864927bff8fd1c68bcc84837')
 
-def add_voice(description, files, labels, name):
-    url = "https://api.elevenlabs.io/v1/voices/add"
-    headers = {
-        "xi-api-key": ELEVENLABS_API_KEY
-    }
-    data = {
-        "description": description,
-        "labels": labels,
-        "name": name
-    }
-    files = [("files", (file_name, open(file_name, "rb"), "audio/mpeg")) for file_name in files]
-    
-    response = requests.post(url, headers=headers, data=data, files=files)
-    return response.json()
+MODEL_ID = 'eleven_monolingual_v1'
 
-def synthesize_speech(voice_id, text, model_id = MODEL_ID, output_format='mp3_44100_128', optimize_streaming_latency=0):
-    url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
-    headers = {
-        "xi-api-key": ELEVENLABS_API_KEY,
-        "Content-Type": "application/json"
-    }
-    data = {
-        "model_id": model_id,
-        "text": text,
-        "output_format": output_format,
-        "optimize_streaming_latency": optimize_streaming_latency,
-        "voice_settings": {
-            "similarity_boost": 1.0,  # Set default values or adjust as needed
-            "stability": 1.0,
-            "style": 0,
-            "use_speaker_boost": True
-        }
-    }
+def add_voice(name, description, files):
+    # Clone a voice using the ElevenLabs API
+    cloned_voice = clone(
+        name=name,
+        description=description,
+        files=files
+    )
+    return cloned_voice
 
-    response = requests.post(url, headers=headers, json=data)
-    if response.status_code == 200:
-        audio_url = response.content
-        return audio_url
-    else:
-        raise Exception(f'Speech synthesis failed: {response.status_code} - {response.text}')
+def synthesize_speech(voice_id, text, model_id=MODEL_ID):
+    # Synthesize speech using the ElevenLabs API
+    audio = generate(
+        text=text,
+        voice=Voice(
+            voice_id=voice_id,
+            settings=VoiceSettings(stability=1.0, similarity_boost=1.0, style=0, use_speaker_boost=True)
+        ),
+        model=model_id
+        # Removed output_format parameter as it's not supported
+    )
+    return audio
