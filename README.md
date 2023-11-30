@@ -32,13 +32,22 @@ This will install all necessary dependencies, including youtube_downloader, elev
 ## Usage
 
 Run the script from the command line with the following arguments:
-- URL: The URL of the YouTube video.
-- Timestamp: The timestamp in the video from where to start capturing audio (format: hh:mm:ss).
-- Duration: The duration in seconds for which to capture audio from the video.
+  -h, --help            show this help message and exit
+  -u URL, --url URL     YouTube video URL (required if not using --audio-file)
+  -t TIMESTAMP, --timestamp TIMESTAMP
+                        Timestamp in the video (format: hh:mm:ss; required if using --url)
+  -d DURATION, --duration DURATION
+                        Duration to capture from the video in seconds (required if using --url)
+  -s SOURCE FILE, --source-file SOURCE FILE
+                        Path to an existing audio file (optional, use instead of --url)
 
-Example:
+Examples:
   ```bash
-python phisher.py <YouTube Video URL> <Timestamp> <Duration>
+python phisher.py -u <YouTube Video URL> -t <Timestamp> -d <Duration>
+```
+
+  ```bash
+python phisher.py -s <Source File Path>
 ```
 
 After executing the command, you will be prompted to enter the text you wish the synthetic voice to say. The application will process this input and output a synthesized speech.
