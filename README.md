@@ -32,7 +32,6 @@ This will install all necessary dependencies, including youtube_downloader, elev
 ## Usage
 
 Run the script from the command line with the following arguments:
-- -h, --help            show this help message and exit
 - -u URL, --url URL     YouTube video URL (required if not using --audio-file)
 - -t TIMESTAMP, --timestamp TIMESTAMP
                         Timestamp in the video (format: hh:mm:ss; required if using --url)
@@ -40,6 +39,7 @@ Run the script from the command line with the following arguments:
                         Duration to capture from the video in seconds (required if using --url)
 - -s SOURCE FILE, --source-file SOURCE FILE
                         Path to an existing audio file (optional, use instead of --url)
+- -h, --help            show this help message and exit
 
 ## Examples
 Running with Youtube as source:
