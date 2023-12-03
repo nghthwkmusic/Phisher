@@ -4,8 +4,8 @@ import random
 import textwrap
 from youtube_downloader import download_audio
 from elevenlabs_api import add_voice, synthesize_speech
-from config_manager import save_configuration
-from elevenlabs import play
+from config_manager import save_configuration, get_configuration
+from elevenlabs import set_api_key, play
 from ascii_arts import ascii_arts  # Import the ASCII arts list
 from phish_quotes import phish_quotes  # Import the Phish quotes list
 
@@ -37,14 +37,24 @@ def parse_args():
     return parser.parse_args()
 
 def main():
+    config = get_configuration()
+
+    # Check if the API key exists
+    if 'api_key' not in config or not config['api_key']:
+        api_key = input("Enter your ElevenLabs API Key: ")
+        save_configuration(None, api_key)  # Save the new API key
+        set_api_key(api_key)
+    else:
+        set_api_key(config['api_key'])  # Use the existing API key
+
     print_ascii_art_and_quote()
     print("\n")
 
     args = parse_args()
 
     # Check if either URL or audio file is provided
-    if not args.url and not args.audio_file:
-        parser.error("Either --url/-u or --audio-file/-a must be provided.")
+    if not args.url and not args.source_file:
+        parser.error("Either --url/-u or --source-file/-s must be provided.")
     elif args.url and (not args.timestamp or not args.duration):
         parser.error("--timestamp/-t and --duration/-d are required when using --url/-u.")
 
@@ -52,7 +62,7 @@ def main():
         print("Downloading audio from YouTube...\n")
         downloaded_audio_file = download_audio(args.url, args.timestamp, args.duration)
     else:
-        downloaded_audio_file = args.audio_file
+        downloaded_audio_file = args.source_file
         if not os.path.exists(downloaded_audio_file):
             raise FileNotFoundError(f"Audio file '{downloaded_audio_file}' not found.")
 
